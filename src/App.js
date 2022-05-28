@@ -1,37 +1,73 @@
 import React from "react";
 import Grid from "./Grid";
-import { Flex, useDisclosure } from "@chakra-ui/react";
+import { Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import { useFocus } from "./utils";
 import Timer from "./Timer";
 import { useEffect } from "react";
 import Confetti from "./Confetti";
+import WinPopUp from "./WinPopUp";
 
 function App() {
-  const [size, setSize] = useState(12);
+  const [size, setSize] = useState(
+    localStorage.getItem("mazeSize") !== null
+      ? localStorage.getItem("mazeSize")
+      : 12
+  );
   const [start, setStart] = useState(false);
   const [regen, setRegen] = useState(false);
   const [counting, setCounting] = useState(false);
   const [restart, setRestart] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [startTime, setStartTime] = useState(
+    localStorage.getItem("startTime") !== null
+      ? localStorage.getItem("startTime")
+      : 60
+  );
+  const [timeLeft, setTimeLeft] = useState(startTime);
+  const [timeAfterGame, setTimeAfterGame] = useState(startTime);
   const [playing, setPlaying] = useState(false);
   const [win, setWin] = useState(false);
 
   const [inputRef, setInputFocus] = useFocus();
-  const { isOpen, onToggle } = useDisclosure({
-    defaultIsOpen: localStorage.getItem("isOpen")
-      ? JSON.parse(localStorage.getItem("isOpen"))
-      : true,
+  const { isOpen: sidebarIsOpen, onToggle: sidebarOnToggle } = useDisclosure({
+    defaultIsOpen:
+      localStorage.getItem("sidebarIsOpen") !== null
+        ? JSON.parse(localStorage.getItem("sidebarIsOpen"))
+        : true,
   });
+  const { isOpen: winIsOpen, onToggle: winOnToggle } = useDisclosure();
+
+  const onResetMaze = () => {
+    const timer = setTimeout(() => {
+      setRestart((prev) => prev + 1);
+    }, 150);
+    setRegen(true);
+    setCounting(false);
+    return () => clearTimeout(timer);
+  };
 
   useEffect(() => {
-    localStorage.setItem("isOpen", JSON.stringify(isOpen));
-  }, [isOpen]);
+    localStorage.setItem("sidebarIsOpen", JSON.stringify(sidebarIsOpen));
+  }, [sidebarIsOpen]);
 
   useEffect(() => {
-    setPlaying(start && !isOpen && timeLeft > 0 && !win);
-  }, [start, isOpen, timeLeft, win]);
+    localStorage.setItem("mazeSize", size);
+  }, [size]);
+
+  useEffect(() => {
+    localStorage.setItem("startTime", startTime);
+  }, [startTime]);
+
+  useEffect(() => {
+    setPlaying(start && !sidebarIsOpen && timeLeft > 0 && !win);
+    if (!winIsOpen && (timeLeft === 0 || win)) {
+      console.log(`${!winIsOpen} and (${timeLeft === 0} or ${win})`);
+      setTimeAfterGame(timeLeft);
+      winOnToggle();
+      onResetMaze();
+    }
+  }, [start, sidebarIsOpen, timeLeft, win, winIsOpen, winOnToggle]);
 
   return (
     <Flex flexDirection="column" width="100vw" alignItems="center">
@@ -42,17 +78,25 @@ function App() {
         setTimeLeft={setTimeLeft}
         playing={playing}
         timeLeft={timeLeft}
+        startTime={startTime}
       />
       <Sidebar
         setRegen={setRegen}
+        size={size}
         setSize={setSize}
         setStart={setStart}
         setInputFocus={setInputFocus}
         setCounting={setCounting}
         restartTimer={() => setRestart((prev) => prev + 1)}
-        isOpen={isOpen}
-        onToggle={onToggle}
+        isOpen={sidebarIsOpen}
+        onToggle={sidebarOnToggle}
         timeLeft={timeLeft}
+        onResetMaze={onResetMaze}
+        gray={win}
+        start={start}
+        canChangeStart={!start}
+        startTime={startTime}
+        setStartTime={setStartTime}
       />
       <Grid
         size={size}
@@ -64,6 +108,33 @@ function App() {
         playing={playing}
         setWin={setWin}
       />
+      <WinPopUp
+        isOpen={winIsOpen}
+        onToggle={winOnToggle}
+        onResetMaze={onResetMaze}>
+        {timeAfterGame > 0 ? (
+          <Text textAlign="center" fontWeight="bold" fontSize="2.5rem">
+            Congratulations!
+            <br /> You won with{" "}
+            <Text
+              as="span"
+              color={
+                timeAfterGame >= 45
+                  ? "#64eb34"
+                  : timeAfterGame > 10
+                  ? "white"
+                  : "tomato"
+              }>
+              {timeAfterGame}
+            </Text>{" "}
+            seconds remaining!
+          </Text>
+        ) : (
+          <Text textAlign="center" fontWeight="bold" fontSize="2.5rem">
+            Oh no! You didn't make it! Better luck next time!
+          </Text>
+        )}
+      </WinPopUp>
     </Flex>
   );
 }
@@ -75,11 +146,11 @@ Sidebar
 - Take up full screen on small
 - On resize of one after win maze still functions
 - on oversize using arrow keys scrolls around
+- on phone use swipe
 
 Movement
-- winning pop upd
-- adjustable start time
 - random teleportation button?
+- Hard mode: crashing into wall disables you
 
 How to
 */

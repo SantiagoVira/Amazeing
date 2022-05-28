@@ -10,9 +10,11 @@ import {
   Slide,
   Fade,
   Box,
+  Text,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import React from "react";
+import { useEffect } from "react";
 
 function OpenButton({ onToggle, right }) {
   return (
@@ -29,17 +31,59 @@ function OpenButton({ onToggle, right }) {
   );
 }
 
+function ThreeStopSlider({ title, stops, onChange, def, disabled }) {
+  return (
+    <>
+      <Text fontWeight={"bold"} textAlign={"center"} mb={4}>
+        {title}
+      </Text>
+
+      <Slider
+        min={stops[0]}
+        defaultValue={def ? def : stops[1]}
+        max={stops[2]}
+        step={1}
+        width="20vw"
+        mb="50px"
+        onChange={onChange}
+        isDisabled={disabled}>
+        <SliderMark value={stops[0]} fontSize="sm" mt={2} ml="-2.5">
+          {stops[0]}
+        </SliderMark>
+        <SliderMark value={stops[1]} fontSize="sm" mt={2} ml="-2.5">
+          {stops[1]}
+        </SliderMark>
+        <SliderMark value={stops[2]} fontSize="sm" mt={2} ml="-2.5">
+          {stops[2]}
+        </SliderMark>
+        <SliderTrack bg="red.100">
+          <SliderFilledTrack bg="tomato" />
+        </SliderTrack>
+        <SliderThumb boxSize={3} outline={0} />
+      </Slider>
+    </>
+  );
+}
+
 function Sidebar({
+  size,
   setSize,
   setStart,
-  setRegen,
   setCounting,
   setInputFocus,
-  restartTimer,
   isOpen,
   onToggle,
   timeLeft,
+  onResetMaze,
+  gray,
+  start,
+  canChangeStart,
+  startTime,
+  setStartTime,
 }) {
+  useEffect(() => {
+    console.log(gray);
+  }, [gray]);
   return (
     <>
       <Box
@@ -49,7 +93,7 @@ function Sidebar({
         left={0}
         w="100vw"
         h="100vh"
-        display={isOpen ? "flex" : "none"}
+        display={isOpen || gray ? "flex" : "none"}
       />
       <Slide in={isOpen} direction="left">
         <Flex
@@ -59,54 +103,48 @@ function Sidebar({
           paddingTop={"5vw"}
           borderRight={"1px solid white"}
           flexDirection="column"
+          justifyContent="space-between"
           position="absolute"
           top={0}
           left={0}
           bg={"gray.800"}>
-          <Slider
-            defaultValue={12}
-            min={4}
-            max={20}
-            step={1}
-            width="20vw"
-            onChange={(v) => setSize(v)}>
-            <SliderMark value={4} fontSize="sm" mt={2} ml="-2.5">
-              4
-            </SliderMark>
-            <SliderMark value={12} fontSize="sm" mt={2} ml="-2.5">
-              12
-            </SliderMark>
-            <SliderMark value={20} fontSize="sm" mt={2} ml="-2.5">
-              20
-            </SliderMark>
-            <SliderTrack bg="red.100">
-              <SliderFilledTrack bg="tomato" />
-            </SliderTrack>
-            <SliderThumb boxSize={3} outline={0} />
-          </Slider>
-          <Button
-            colorScheme="red"
-            variant="outline"
-            mt="5vh"
-            onClick={() => {
-              setRegen(true);
-              restartTimer();
-              setCounting(false);
-            }}>
-            Re-Generate
-          </Button>
-          <Button
-            colorScheme="red"
-            variant="outline"
-            mt="5vh"
-            onClick={() => {
-              setStart(true);
-              onToggle();
-              setInputFocus();
-              setCounting(true);
-            }}>
-            {timeLeft >= 60 || timeLeft === 0 ? "Start" : "Resume"}
-          </Button>
+          <Box>
+            <ThreeStopSlider
+              title={"Maze Size"}
+              stops={[4, 12, 20]}
+              onChange={setSize}
+              def={size}
+            />
+            <ThreeStopSlider
+              title={"Start Time"}
+              stops={[20, 60, 100]}
+              onChange={setStartTime}
+              disabled={!canChangeStart}
+            />
+          </Box>
+          <Flex flexDirection="column">
+            <Button
+              colorScheme="red"
+              variant="outline"
+              mt="5vh"
+              onClick={onResetMaze}>
+              Re-Generate
+            </Button>
+
+            <Button
+              colorScheme="red"
+              variant="solid"
+              color="gray.800"
+              mt="5vh"
+              onClick={() => {
+                setStart(true);
+                onToggle();
+                setInputFocus();
+                setCounting(true);
+              }}>
+              {timeLeft >= startTime || timeLeft === 0 ? "Start" : "Resume"}
+            </Button>
+          </Flex>
           <OpenButton onToggle={onToggle} right={true} />
         </Flex>
       </Slide>

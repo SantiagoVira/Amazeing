@@ -76,9 +76,6 @@ function Grid({
 }) {
   const [pattern, setPattern] = useState([]);
   const [current, setCurrent] = useState([-1, -1]);
-  const startingWalls = { x: { 0: 3 }, y: { 0: 0 } };
-  startingWalls.x[size - 1] = 1;
-  startingWalls.y[size - 1] = 2;
 
   // Keypresses
   const keyPress = useCallback(
@@ -126,7 +123,7 @@ function Grid({
     setWin(false);
     setRegen(false);
     setCurrent(-1, -1);
-  }, [regen, size, pattern.length, current, setStart, setRegen, setWin]);
+  }, [regen, size, pattern.length, setStart, setRegen, setWin]);
 
   // Generate and display maze
   useEffect(() => {

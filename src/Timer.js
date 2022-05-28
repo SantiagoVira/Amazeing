@@ -11,12 +11,19 @@ const getReturnValues = (countDown) => {
   return `${minutes}:${timeFormat(seconds)}`;
 };
 
-function Timer({ counting, restart, setTimeLeft, playing, timeLeft }) {
+function Timer({
+  counting,
+  restart,
+  setTimeLeft,
+  playing,
+  timeLeft,
+  startTime,
+}) {
   return (
     <Box my="4vh">
       <CountdownCircleTimer
         isPlaying={counting && playing}
-        duration={60}
+        duration={startTime}
         colors={["#64eb34", "#c1fc35", "#f6fa00", "#e02914", "#e02914"]}
         colorsTime={[45, 30, 15, 10, 0]}
         trailColor={timeLeft > 0 ? "#d9d9d9" : "tomato"}
