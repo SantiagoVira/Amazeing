@@ -75,11 +75,13 @@ function Sidebar({
   onToggle,
   timeLeft,
   onResetMaze,
+  howToOnToggle,
   gray,
   start,
   canChangeStart,
   startTime,
   setStartTime,
+  howToFinalRef,
 }) {
   useEffect(() => {
     console.log(gray);
@@ -120,28 +122,36 @@ function Sidebar({
               stops={[20, 60, 100]}
               onChange={setStartTime}
               disabled={!canChangeStart}
+              def={startTime}
             />
           </Box>
           <Flex flexDirection="column">
             <Button
               colorScheme="red"
               variant="outline"
-              mt="5vh"
+              mt="2vh"
+              onClick={howToOnToggle}>
+              How To
+            </Button>
+            <Button
+              colorScheme="red"
+              variant="outline"
+              mt="2vh"
               onClick={onResetMaze}>
               Re-Generate
             </Button>
-
             <Button
               colorScheme="red"
               variant="solid"
               color="gray.800"
-              mt="5vh"
+              mt="6vh"
               onClick={() => {
                 setStart(true);
                 onToggle();
                 setInputFocus();
                 setCounting(true);
-              }}>
+              }}
+              ref={howToFinalRef}>
               {timeLeft >= startTime || timeLeft === 0 ? "Start" : "Resume"}
             </Button>
           </Flex>

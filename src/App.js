@@ -1,13 +1,13 @@
 import React from "react";
 import Grid from "./Grid";
 import { Flex, Text, useDisclosure } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Sidebar from "./Sidebar";
 import { useFocus } from "./utils";
 import Timer from "./Timer";
-import { useEffect } from "react";
 import Confetti from "./Confetti";
 import WinPopUp from "./WinPopUp";
+import HowToPopUp from "./HowToPopUp";
 
 function App() {
   const [size, setSize] = useState(
@@ -37,6 +37,10 @@ function App() {
         : true,
   });
   const { isOpen: winIsOpen, onToggle: winOnToggle } = useDisclosure();
+  const { isOpen: howToIsOpen, onToggle: howToOnToggle } = useDisclosure();
+
+  const howToInitialRef = useRef();
+  const howToFinalRef = useRef();
 
   const onResetMaze = () => {
     const timer = setTimeout(() => {
@@ -92,11 +96,13 @@ function App() {
         onToggle={sidebarOnToggle}
         timeLeft={timeLeft}
         onResetMaze={onResetMaze}
+        howToOnToggle={howToOnToggle}
         gray={win}
         start={start}
         canChangeStart={!start}
         startTime={startTime}
         setStartTime={setStartTime}
+        howToFinalRef={howToFinalRef}
       />
       <Grid
         size={size}
@@ -107,6 +113,12 @@ function App() {
         inputRef={inputRef}
         playing={playing}
         setWin={setWin}
+      />
+      <HowToPopUp
+        initialRef={howToInitialRef}
+        finalRef={howToFinalRef}
+        isOpen={howToIsOpen}
+        onToggle={howToOnToggle}
       />
       <WinPopUp
         isOpen={winIsOpen}
@@ -140,17 +152,3 @@ function App() {
 }
 
 export default App;
-
-/*
-Sidebar
-- Take up full screen on small
-- On resize of one after win maze still functions
-- on oversize using arrow keys scrolls around
-- on phone use swipe
-
-Movement
-- random teleportation button?
-- Hard mode: crashing into wall disables you
-
-How to
-*/
