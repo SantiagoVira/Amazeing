@@ -70,7 +70,7 @@ function Grid({
   setStart,
   regen,
   setRegen,
-  inputRef,
+  mazeRef,
   playing,
   setWin,
 }) {
@@ -141,7 +141,7 @@ function Grid({
       width={pixels(size * boxSize)}
       tabIndex={0}
       outline={0}
-      ref={inputRef}>
+      ref={mazeRef}>
       {pattern.map((row, y) => {
         return row.map((props, x) => {
           return (

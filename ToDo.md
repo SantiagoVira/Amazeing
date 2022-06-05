@@ -18,6 +18,7 @@ V1 Done!!
 ## Movement
 
 - Mobile devices use swipe controlling
+- Add W, A, S, D controls too
 
 ## Features
 

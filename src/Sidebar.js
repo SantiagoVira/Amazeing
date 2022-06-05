@@ -11,6 +11,13 @@ import {
   Fade,
   Box,
   Text,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import React from "react";
@@ -31,6 +38,28 @@ function OpenButton({ onToggle, right }) {
   );
 }
 
+function HandleOnClosed({ isOpen, onToggle, children }) {
+  return (
+    <>
+      {children}
+      <Fade in={!isOpen}>
+        <Flex
+          position="absolute"
+          top={0}
+          left={0}
+          zIndex={10}
+          width="fit-content"
+          p="0.2rem"
+          height="100vh"
+          borderRight="1px solid white"
+          bg="gray.800">
+          <OpenButton onToggle={onToggle} />
+        </Flex>
+      </Fade>
+    </>
+  );
+}
+
 function ThreeStopSlider({ title, stops, onChange, def, disabled }) {
   return (
     <>
@@ -43,7 +72,7 @@ function ThreeStopSlider({ title, stops, onChange, def, disabled }) {
         defaultValue={def ? def : stops[1]}
         max={stops[2]}
         step={1}
-        width="20vw"
+        width="90%"
         mb="50px"
         onChange={onChange}
         isDisabled={disabled}>
@@ -70,108 +99,84 @@ function Sidebar({
   setSize,
   setStart,
   setCounting,
-  setInputFocus,
+  setMazeFocus,
+  mazeRef,
   isOpen,
   onToggle,
   timeLeft,
   onResetMaze,
   howToOnToggle,
-  gray,
   start,
   canChangeStart,
   startTime,
   setStartTime,
   howToFinalRef,
 }) {
-  useEffect(() => {
-    console.log(gray);
-  }, [gray]);
   return (
-    <>
-      <Box
-        bg="blackAlpha.700"
-        position={"absolute"}
-        top={0}
-        left={0}
-        w="100vw"
-        h="100vh"
-        display={isOpen || gray ? "flex" : "none"}
-      />
-      <Slide in={isOpen} direction="left">
-        <Flex
-          w={"25vw"}
-          h={"100vh"}
-          padding={"2.5vw"}
-          paddingTop={"5vw"}
-          borderRight={"1px solid white"}
-          flexDirection="column"
-          justifyContent="space-between"
-          position="absolute"
-          top={0}
-          left={0}
-          bg={"gray.800"}>
-          <Box>
-            <ThreeStopSlider
-              title={"Maze Size"}
-              stops={[4, 12, 20]}
-              onChange={setSize}
-              def={size}
-            />
-            <ThreeStopSlider
-              title={"Start Time"}
-              stops={[20, 60, 100]}
-              onChange={setStartTime}
-              disabled={!canChangeStart}
-              def={startTime}
-            />
-          </Box>
-          <Flex flexDirection="column">
-            <Button
-              colorScheme="red"
-              variant="outline"
-              mt="2vh"
-              onClick={howToOnToggle}>
-              How To
-            </Button>
-            <Button
-              colorScheme="red"
-              variant="outline"
-              mt="2vh"
-              onClick={onResetMaze}>
-              Re-Generate
-            </Button>
-            <Button
-              colorScheme="red"
-              variant="solid"
-              color="gray.800"
-              mt="6vh"
-              onClick={() => {
-                setStart(true);
-                onToggle();
-                setInputFocus();
-                setCounting(true);
-              }}
-              ref={howToFinalRef}>
-              {timeLeft >= startTime || timeLeft === 0 ? "Start" : "Resume"}
-            </Button>
-          </Flex>
-          <OpenButton onToggle={onToggle} right={true} />
-        </Flex>
-      </Slide>
-      <Fade in={!isOpen}>
-        <Flex
-          position="absolute"
-          top={0}
-          left={0}
-          zIndex={10}
-          width="fit-content"
-          height="100vh"
-          borderRight="1px solid white"
-          bg="gray.800">
-          <OpenButton onToggle={onToggle} />
-        </Flex>
-      </Fade>
-    </>
+    <HandleOnClosed isOpen={isOpen} onToggle={onToggle}>
+      <Drawer
+        isOpen={isOpen}
+        placement="left"
+        onClose={onToggle}
+        finalFocusRef={mazeRef}
+        size="sm">
+        <DrawerOverlay />
+        <DrawerContent borderRight="1px solid white" bg="gray.800">
+          <DrawerHeader>Menu</DrawerHeader>
+
+          <DrawerBody>
+            <Flex flexDirection="column" justifyContent="space-between">
+              <Flex flexDirection="column" alignItems="center">
+                <ThreeStopSlider
+                  title="Maze Size"
+                  stops={[4, 12, 20]}
+                  onChange={setSize}
+                  def={size}
+                />
+                <ThreeStopSlider
+                  title="Start Time"
+                  stops={[20, 60, 100]}
+                  onChange={setStartTime}
+                  disabled={!canChangeStart}
+                  def={startTime}
+                />
+              </Flex>
+              <Flex flexDirection="column">
+                <Button
+                  colorScheme="red"
+                  variant="outline"
+                  mt="2vh"
+                  onClick={howToOnToggle}>
+                  How To
+                </Button>
+                <Button
+                  colorScheme="red"
+                  variant="outline"
+                  mt="2vh"
+                  onClick={onResetMaze}>
+                  Re-Generate
+                </Button>
+                <Button
+                  colorScheme="red"
+                  variant="solid"
+                  color="gray.800"
+                  mt="6vh"
+                  onClick={() => {
+                    setStart(true);
+                    onToggle();
+                    setMazeFocus();
+                    setCounting(true);
+                  }}
+                  ref={howToFinalRef}>
+                  {timeLeft >= startTime || timeLeft === 0 ? "Start" : "Resume"}
+                </Button>
+              </Flex>
+              <OpenButton onToggle={onToggle} right={true} />
+            </Flex>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </HandleOnClosed>
   );
 }
 

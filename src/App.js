@@ -29,7 +29,7 @@ function App() {
   const [playing, setPlaying] = useState(false);
   const [win, setWin] = useState(false);
 
-  const [inputRef, setInputFocus] = useFocus();
+  const [mazeRef, setMazeFocus] = useFocus();
   const { isOpen: sidebarIsOpen, onToggle: sidebarOnToggle } = useDisclosure({
     defaultIsOpen:
       localStorage.getItem("sidebarIsOpen") !== null
@@ -89,7 +89,8 @@ function App() {
         size={size}
         setSize={setSize}
         setStart={setStart}
-        setInputFocus={setInputFocus}
+        setMazeFocus={setMazeFocus}
+        mazeRef={mazeRef}
         setCounting={setCounting}
         restartTimer={() => setRestart((prev) => prev + 1)}
         isOpen={sidebarIsOpen}
@@ -110,7 +111,7 @@ function App() {
         setStart={setStart}
         regen={regen}
         setRegen={setRegen}
-        inputRef={inputRef}
+        mazeRef={mazeRef}
         playing={playing}
         setWin={setWin}
       />
