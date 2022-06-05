@@ -49,10 +49,7 @@ function HandleOnClosed({ isOpen, onToggle, children }) {
           left={0}
           zIndex={10}
           width="fit-content"
-          p="0.2rem"
-          height="100vh"
-          borderRight="1px solid white"
-          bg="gray.800">
+          p="0.2rem">
           <OpenButton onToggle={onToggle} />
         </Flex>
       </Fade>
@@ -119,13 +116,18 @@ function Sidebar({
         placement="left"
         onClose={onToggle}
         finalFocusRef={mazeRef}
-        size="sm">
+        size={window.innerWidth < 540 ? "full" : "sm"}>
         <DrawerOverlay />
-        <DrawerContent borderRight="1px solid white" bg="gray.800">
+        <DrawerContent
+          borderRight={window.innerWidth < 540 ? "0" : "1px solid white"}
+          bg="gray.800">
           <DrawerHeader>Menu</DrawerHeader>
 
           <DrawerBody>
-            <Flex flexDirection="column" justifyContent="space-between">
+            <Flex
+              flexDirection="column"
+              justifyContent="space-between"
+              height="92.5%">
               <Flex flexDirection="column" alignItems="center">
                 <ThreeStopSlider
                   title="Maze Size"

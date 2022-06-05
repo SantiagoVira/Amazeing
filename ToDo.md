@@ -1,6 +1,11 @@
 ## Responsivity
 
-- Sidebar take up full screen on small screen
+- Sidebar text too small on
+  - iPad air
+  - iPad mini
+  - iPhone XR
+  - Surface Pro 7
+  - Nest Hub Max
 - When Maze is too big using the arrow keys scrolls the screen
 
 ---
@@ -8,6 +13,10 @@
 V1 Done!!
 
 ---
+
+## Updates
+
+- Get chakra breakpoints working for sidebar and such
 
 ## Movement
 
