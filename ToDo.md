@@ -1,9 +1,3 @@
-## Update
-
-- Sidebar made out of Drawer Component
-  - get rid of current graying out method
-- Win Pop Up made out of Modal Component
-
 ## Responsivity
 
 - Sidebar take up full screen on small screen
