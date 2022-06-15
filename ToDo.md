@@ -1,16 +1,5 @@
-## Responsivity
-
-- Sidebar text too small on
-  - iPad air
-  - iPad mini
-  - iPhone XR
-  - Surface Pro 7
-  - Nest Hub Max
-
 ---
-
 V1 Done!!
-
 ---
 
 ## Updates

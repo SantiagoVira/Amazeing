@@ -11,7 +11,9 @@ const config = {
 
 const customTheme = extendTheme({
   config,
-  styles: { global: { timer: "DSEG7" } },
+  styles: {
+    global: { timer: "DSEG7", p: { fontSize: { sm: "1.4rem", lg: "1rem" } } },
+  },
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

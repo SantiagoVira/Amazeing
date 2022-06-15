@@ -7,21 +7,17 @@ import {
   SliderMark,
   Button,
   IconButton,
-  Slide,
   Fade,
-  Box,
   Text,
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import React from "react";
-import { useEffect } from "react";
+import useWindowDimensions from "./useWindowDimensions";
 
 function OpenButton({ onToggle, right }) {
   return (
@@ -60,7 +56,7 @@ function HandleOnClosed({ isOpen, onToggle, children }) {
 function ThreeStopSlider({ title, stops, onChange, def, disabled }) {
   return (
     <>
-      <Text fontWeight={"bold"} textAlign={"center"} mb={4}>
+      <Text fontWeight={"semibold"} textAlign={"center"} mb={4}>
         {title}
       </Text>
 
@@ -73,13 +69,25 @@ function ThreeStopSlider({ title, stops, onChange, def, disabled }) {
         mb="50px"
         onChange={onChange}
         isDisabled={disabled}>
-        <SliderMark value={stops[0]} fontSize="sm" mt={2} ml="-2.5">
+        <SliderMark
+          value={stops[0]}
+          fontSize={{ sm: "1.4rem", lg: "0.8rem" }}
+          mt={2}
+          ml="-2.5">
           {stops[0]}
         </SliderMark>
-        <SliderMark value={stops[1]} fontSize="sm" mt={2} ml="-2.5">
+        <SliderMark
+          value={stops[1]}
+          fontSize={{ sm: "1.4rem", lg: "0.8rem" }}
+          mt={2}
+          ml="-2.5">
           {stops[1]}
         </SliderMark>
-        <SliderMark value={stops[2]} fontSize="sm" mt={2} ml="-2.5">
+        <SliderMark
+          value={stops[2]}
+          fontSize={{ sm: "1.4rem", lg: "0.8rem" }}
+          mt={2}
+          ml="-2.5">
           {stops[2]}
         </SliderMark>
         <SliderTrack bg="red.100">
@@ -109,6 +117,7 @@ function Sidebar({
   setStartTime,
   howToFinalRef,
 }) {
+  const { width } = useWindowDimensions();
   return (
     <HandleOnClosed isOpen={isOpen} onToggle={onToggle}>
       <Drawer
@@ -116,10 +125,10 @@ function Sidebar({
         placement="left"
         onClose={onToggle}
         finalFocusRef={mazeRef}
-        size={window.innerWidth < 540 ? "full" : "sm"}>
+        size={width < 550 ? "full" : "sm"}>
         <DrawerOverlay />
         <DrawerContent
-          borderRight={window.innerWidth < 540 ? "0" : "1px solid white"}
+          borderRight={width < 550 ? "0" : "1px solid white"}
           bg="gray.800">
           <DrawerHeader>Menu</DrawerHeader>
 
@@ -149,14 +158,14 @@ function Sidebar({
                   variant="outline"
                   mt="2vh"
                   onClick={howToOnToggle}>
-                  How To
+                  <Text>How To</Text>
                 </Button>
                 <Button
                   colorScheme="red"
                   variant="outline"
                   mt="2vh"
                   onClick={onResetMaze}>
-                  Re-Generate
+                  <Text>Re-Generate</Text>
                 </Button>
                 <Button
                   colorScheme="red"
@@ -170,7 +179,11 @@ function Sidebar({
                     setCounting(true);
                   }}
                   ref={howToFinalRef}>
-                  {timeLeft >= startTime || timeLeft === 0 ? "Start" : "Resume"}
+                  <Text>
+                    {timeLeft >= startTime || timeLeft === 0
+                      ? "Start"
+                      : "Resume"}
+                  </Text>
                 </Button>
               </Flex>
               <OpenButton onToggle={onToggle} right={true} />
