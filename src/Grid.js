@@ -3,14 +3,8 @@ import { useEffect } from "react";
 import { useCallback } from "react";
 import { useState } from "react";
 import Cell from "./Cell";
-import {
-  boxSize,
-  pixels,
-  between,
-  sum,
-  randomShuffle,
-  keyDownHandler,
-} from "./utils";
+import { between, sum, randomShuffle, keyDownHandler } from "./utils";
+import useWindowDimensions from "./useWindowDimensions";
 
 // The function to recursively cut up a maze
 function CarveFrom(oldX, oldY, grid) {
@@ -76,6 +70,10 @@ function Grid({
 }) {
   const [pattern, setPattern] = useState([]);
   const [current, setCurrent] = useState([-1, -1]);
+  const { height, width } = useWindowDimensions();
+  const [mazeDimensions, setMazeDimensions] = useState(
+    width > height ? "70vh" : "85vw"
+  );
 
   // Keypresses
   const keyPress = useCallback(
@@ -134,11 +132,16 @@ function Grid({
     }
   }, [start, size]);
 
+  // Update maze size
+  useEffect(() => {
+    setMazeDimensions(width > height ? "70vh" : "85vw");
+  }, [width, height]);
+
   return (
     <SimpleGrid
       columns={size}
       spacing={0}
-      width={pixels(size * boxSize)}
+      width={mazeDimensions}
       tabIndex={0}
       outline={0}
       ref={mazeRef}>
@@ -149,6 +152,8 @@ function Grid({
               status={props.status}
               current={current}
               location={[x, y]}
+              size={size}
+              mazeDimensions={mazeDimensions}
               key={props.key}
             />
           );

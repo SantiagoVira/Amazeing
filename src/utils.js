@@ -1,7 +1,5 @@
 import { useRef } from "react";
 
-const boxSize = 30;
-const pixels = (numPix) => `${numPix}px`;
 const between = (num, min, max) => num >= min && num < max;
 const sum = (arr) =>
   arr.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
@@ -48,13 +46,4 @@ function timeFormat(num) {
   return s.substr(s.length - 2);
 }
 
-export {
-  boxSize,
-  pixels,
-  between,
-  sum,
-  randomShuffle,
-  keyDownHandler,
-  useFocus,
-  timeFormat,
-};
+export { between, sum, randomShuffle, keyDownHandler, useFocus, timeFormat };

@@ -6,7 +6,6 @@
   - iPhone XR
   - Surface Pro 7
   - Nest Hub Max
-- When Maze is too big using the arrow keys scrolls the screen
 
 ---
 

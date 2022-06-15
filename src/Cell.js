@@ -1,9 +1,8 @@
 import React from "react";
 import { Box } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { boxSize, pixels } from "./utils";
 
-function Cell({ status, current, location }) {
+function Cell({ status, current, location, size, mazeDimensions }) {
   const [bg, setBg] = useState(
     current[0] === location[0] && current[1] === location[1]
       ? "tomato"
@@ -20,8 +19,8 @@ function Cell({ status, current, location }) {
 
   return (
     <Box
-      width={pixels(boxSize)}
-      height={pixels(boxSize)}
+      width={`calc(${mazeDimensions} / ${size})`}
+      height={`calc(${mazeDimensions} / ${size})`}
       border={"1px solid white"}
       borderTop={status[0] > 0 ? "1px" : "0px"}
       borderRight={status[1] > 0 ? "1px" : "0px"}
